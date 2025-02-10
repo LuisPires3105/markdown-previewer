@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react';
+import { useState } from 'react';
 import { marked } from 'marked';
 
 marked.use({
@@ -7,47 +7,58 @@ marked.use({
   gfm: true,
 });
 
-const initialState = {editor_input: `# This is an <h1> element
-### This is an <h3> element`,
-}
+const initialState = `# This is an h1 element
+## This is an h2 element
+### This is an h3 element
 
-class MarkdownPreviewer extends React.Component{
-  constructor(props){
-    super(props);
-    this.state = initialState;
-    this.handleInput = this.handleInput.bind(this);
-  }
+[links](https://www.freecodecamp.org)
 
-  handleInput(event){
-    const input_text = event.target.value;
-    document.getElementById("preview").innerHTML = marked.parse(input_text);
-    this.setState(() => {
-      return {
-      editor_input: input_text,
-      }
-    })
-  }
+\`<div></div>\`
 
-  render(){
-    
-    return <div>
-      <div id="editor-window">
-          <h2>Editor Window</h2>
-          <textarea id = "editor" rows= "15" cols = "100" onInput={this.handleInput}>{this.state.editor_input}</textarea>
-      </div>
-      <div id="preview" dangerouslySetInnerHTML={{__html: marked.parse(this.state.editor_input)}}>
-      </div>
-    </div>
-  }
-}
+list
 
+- And of course there are lists.
+  - Some are bulleted.
+     - With different indentation levels.
+        - That look like this.
+
+text
+> Block Quotes!
+
+**bold**
+
+![freeCodeCamp Logo](https://cdn.freecodecamp.org/testable-projects-fcc/images/fcc_secondary.svg)
+
+\`\`\`
+
+something
+// this is multi-line code:
+
+\`\`\`
+
+`;
 
 function App() {
+
+  const [editorInput, setEditorInput] = useState(initialState);
+
+  function handleInput(event){
+    setEditorInput(event.target.value);
+  }
+
   return (
     <div className="App">
-      <MarkdownPreviewer id="window"/>
+      <div>
+        <div id="editor-window">
+          <h2>Editor Window</h2>
+          <textarea id = "editor" rows= "15" cols = "100" onInput={handleInput}>{editorInput}</textarea>
+        </div>
+        <div id="preview" dangerouslySetInnerHTML={{__html: marked.parse(editorInput)}}>
+        </div>
+      </div>
     </div>
   );
+
 }
 
 
